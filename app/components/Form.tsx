@@ -17,6 +17,10 @@ const Form = () => {
         terms: false
     });
 
+    const [inputKey, setInputKey] = useState (
+        Math.random().toString()
+    );
+
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.type === 'file') {
             if (e.target.files) {
@@ -44,6 +48,8 @@ const Form = () => {
             // Using new Firestore API to add a document
             await addDoc(collection(db, "forms"), formData);
     
+            setInputKey(Math.random().toString()); // This will cause the file input to re-render, clearing its value
+
             setFormData({
                 firstName: '',
                 lastName: '',
@@ -65,32 +71,32 @@ const Form = () => {
              <div className="flex flex-row border-2">
                 <div>
                     <label htmlFor="firstName">First Name</label>
-                    <input id="firstName" className="flex flex-col border-2 border-slate-800" type="text" name="firstName" onChange={handleChange} required/>
+                    <input id="firstName" className="flex flex-col border-2 border-slate-800" type="text" name="firstName" onChange={handleChange} value={formData.firstName} required/>
                 </div>
                 <div>
                     <label htmlFor="lastName">Last Name</label>
-                    <input id="lastName" className="flex flex-col border-2 border-slate-800" type="text" name="lastName" onChange={handleChange} required/>
+                    <input id="lastName" className="flex flex-col border-2 border-slate-800" type="text" name="lastName" onChange={handleChange} value={formData.lastName} required/>
                 </div>
                 </div>
                 <div>
                     <label htmlFor="emailAddress">Email Address</label>
-                    <input id="emailAddress" className="flex flex-col border-2 border-slate-800" type="email" name="emailAddress" onChange={handleChange} required/>
+                    <input id="emailAddress" className="flex flex-col border-2 border-slate-800" type="email" name="emailAddress" onChange={handleChange} value={formData.emailAddress} required/>
                 </div>
                
                 <div>
                     <label htmlFor="phoneNumber">Phone Number</label>
-                    <input id="phoneNumber" className="flex flex-col border-2 border-slate-800" type="tel" name="phoneNumber" onChange={handleChange} required/>
+                    <input id="phoneNumber" className="flex flex-col border-2 border-slate-800" type="tel" name="phoneNumber" onChange={handleChange} value={formData.phoneNumber} required/>
                 </div>
                 <div>
                     <label htmlFor="receipt">Receipt Upload</label>
-                    <input id="receipt" className="flex flex-col border-2 border-slate-800" type="file" name="receipt" accept="image/*" onChange={handleChange}/>
+                    <input key={inputKey} id="receipt" className="flex flex-col border-2 border-slate-800" type="file" name="receipt" accept="image/*" onChange={handleChange}/>
                 </div>
                 <div>
-                    <input type="checkbox" id="marketing" name="marketing" onChange={handleChange} />
+                    <input type="checkbox" id="marketing" name="marketing" onChange={handleChange} checked={formData.marketing} />
                     <label id="marketing" htmlFor="marketing">I agree to receive marketing materials</label>
                 </div>
                 <div>
-                    <input type="checkbox" id="terms" name="terms" onChange={handleChange} required />
+                    <input type="checkbox" id="terms" name="terms" onChange={handleChange} checked={formData.terms} required />
                     <label id="terms" htmlFor="terms">I agree to the terms and conditions</label>
                 </div>
             </fieldset>
