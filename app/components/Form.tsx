@@ -65,33 +65,33 @@ const Form = () => {
              <div className="flex flex-row border-2">
                 <div>
                     <label htmlFor="firstName">First Name</label>
-                    <input className="flex flex-col border-2 border-slate-800" type="text" name="firstName" onChange={handleChange} required/>
+                    <input id="firstName" className="flex flex-col border-2 border-slate-800" type="text" name="firstName" onChange={handleChange} required/>
                 </div>
                 <div>
                     <label htmlFor="lastName">Last Name</label>
-                    <input className="flex flex-col border-2 border-slate-800" type="text" name="lastName" onChange={handleChange} required/>
+                    <input id="lastName" className="flex flex-col border-2 border-slate-800" type="text" name="lastName" onChange={handleChange} required/>
                 </div>
                 </div>
                 <div>
                     <label htmlFor="emailAddress">Email Address</label>
-                    <input className="flex flex-col border-2 border-slate-800" type="email" name="emailAddress" onChange={handleChange} required/>
+                    <input id="emailAddress" className="flex flex-col border-2 border-slate-800" type="email" name="emailAddress" onChange={handleChange} required/>
                 </div>
                
                 <div>
                     <label htmlFor="phoneNumber">Phone Number</label>
-                    <input className="flex flex-col border-2 border-slate-800" type="tel" name="phoneNumber" onChange={handleChange} required/>
+                    <input id="phoneNumber" className="flex flex-col border-2 border-slate-800" type="tel" name="phoneNumber" onChange={handleChange} required/>
                 </div>
                 <div>
                     <label htmlFor="receipt">Receipt Upload</label>
-                    <input className="flex flex-col border-2 border-slate-800" type="file" name="receipt" accept="image/*" onChange={handleChange}/>
+                    <input id="receipt" className="flex flex-col border-2 border-slate-800" type="file" name="receipt" accept="image/*" onChange={handleChange}/>
                 </div>
                 <div>
                     <input type="checkbox" id="marketing" name="marketing" onChange={handleChange} />
-                    <label htmlFor="marketing">I agree to receive marketing materials</label>
+                    <label id="marketing" htmlFor="marketing">I agree to receive marketing materials</label>
                 </div>
                 <div>
                     <input type="checkbox" id="terms" name="terms" onChange={handleChange} required />
-                    <label htmlFor="terms">I agree to the terms and conditions</label>
+                    <label id="terms" htmlFor="terms">I agree to the terms and conditions</label>
                 </div>
             </fieldset>
             <div>
