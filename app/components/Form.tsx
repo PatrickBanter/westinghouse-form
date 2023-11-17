@@ -17,11 +17,13 @@ const Form = () => {
         terms: false
     });
 
-    const handleChange = (e) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.type === 'file') {
-            setFormData({
-                ...formData, [e.target.name]: e.target.files[0]
-            });
+            if (e.target.files) {
+                setFormData({
+                    ...formData, [e.target.name]: e.target.files[0]
+                });
+            }
         }
         else if (e.target.type === 'checkbox') {
             setFormData({
@@ -35,7 +37,7 @@ const Form = () => {
         }
     };
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
     
         try {
