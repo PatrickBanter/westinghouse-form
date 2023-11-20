@@ -1,13 +1,26 @@
 "use client"
-
+//  "firebase": "^10.6.0" is used in this project
 import React, { useState } from "react";
+import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { collection, addDoc } from "firebase/firestore"; // Importing new Firebase functions
 import { db } from "../firebase"; // Ensure this is set up for Firebase 10.6.0
+import { v4 as uuidv4 } from 'uuid';
+
 
 // Main form that submits to Firebase Firestore
 const Form = () => {
 
-    const [formData, setFormData] = useState({
+    interface FormData {
+        firstName: string;
+        lastName: string;
+        emailAddress: string;
+        phoneNumber: string;
+        receipt: File | null;
+        marketing: boolean;
+        terms: boolean;
+    }
+    
+    const [formData, setFormData] = useState<FormData>({
         firstName: '',
         lastName: '',
         emailAddress: '',
@@ -44,23 +57,55 @@ const Form = () => {
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
     
-        try {
-            // Using new Firestore API to add a document
-            await addDoc(collection(db, "forms"), formData);
+        if (formData.receipt) {
+            // Generate a unique token
+            const token = uuidv4();
     
-            setInputKey(Math.random().toString()); // This will cause the file input to re-render, clearing its value
-
-            setFormData({
-                firstName: '',
-                lastName: '',
-                emailAddress: '',
-                phoneNumber: '',
-                receipt: null,
-                marketing: false,
-                terms: false
-            });
-        } catch (error) {
-            console.error("Error adding document: ", error);
+            // Create a reference to the file in Firebase Storage with the token
+            const storage = getStorage();
+            const storageRef = ref(storage, `receipts/${formData.receipt.name}?alt=media&token=${token}`);
+    
+            // Upload the file to Firebase Storage
+            const uploadTask = uploadBytesResumable(storageRef, formData.receipt);
+    
+            uploadTask.on('state_changed', 
+                (snapshot) => {
+                    // Observe state change events such as progress, pause, and resume
+                    const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                    console.log('Upload is ' + progress + '% done');
+                }, 
+                (error) => {
+                    // Handle unsuccessful uploads
+                    console.error("Error uploading file: ", error);
+                }, 
+                () => {
+                    // Handle successful uploads on complete
+                    // Construct the download URL
+                    const downloadURL = `https://firebasestorage.googleapis.com/v0/b/${storageRef.bucket}/o/${encodeURIComponent(storageRef.fullPath)}`;
+    
+                    // Store the download URL in Firestore
+                    const newFormData = { ...formData, receipt: downloadURL };
+                    addDoc(collection(db, "forms"), newFormData)
+                        .then(() => {
+                            setInputKey(Math.random().toString()); // This will cause the file input to re-render, clearing its value
+    
+                            setFormData({
+                                firstName: '',
+                                lastName: '',
+                                emailAddress: '',
+                                phoneNumber: '',
+                                receipt: null,
+                                marketing: false,
+                                terms: false
+                            });
+                        })
+                        .catch((error) => {
+                            console.error("Error adding document: ", error);
+                        });
+                }
+            );
+        } else {
+            console.error("No file selected for upload.");
         }
     };
 
