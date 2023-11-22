@@ -78,30 +78,37 @@ const Form = () => {
                     // Handle unsuccessful uploads
                     console.error("Error uploading file: ", error);
                 }, 
-                () => {
+                async () => {
                     // Handle successful uploads on complete
                     // Construct the download URL
                     const downloadURL = `https://firebasestorage.googleapis.com/v0/b/${storageRef.bucket}/o/${encodeURIComponent(storageRef.fullPath)}`;
     
-                    // Store the download URL in Firestore
+                    // Store the form data in Firestore
                     const newFormData = { ...formData, receipt: downloadURL };
-                    addDoc(collection(db, "forms"), newFormData)
-                        .then(() => {
-                            setInputKey(Math.random().toString()); // This will cause the file input to re-render, clearing its value
+                    await addDoc(collection(db, "forms"), newFormData);
     
-                            setFormData({
-                                firstName: '',
-                                lastName: '',
-                                emailAddress: '',
-                                phoneNumber: '',
-                                receipt: null,
-                                marketing: false,
-                                terms: false
-                            });
-                        })
-                        .catch((error) => {
-                            console.error("Error adding document: ", error);
-                        });
+                    // Send an email notification
+                    const emailData = {
+                        to: formData.emailAddress,
+                        message: {
+                            subject: "Form Submission Successful",
+                            text: "Your form has been successfully submitted.",
+                            html: "<p>Your form has been <strong>successfully</strong> submitted.</p>",
+                        },
+                    };
+                    await addDoc(collection(db, "mail"), emailData);
+    
+                    setInputKey(Math.random().toString()); // This will cause the file input to re-render, clearing its value
+    
+                    setFormData({
+                        firstName: '',
+                        lastName: '',
+                        emailAddress: '',
+                        phoneNumber: '',
+                        receipt: null,
+                        marketing: false,
+                        terms: false
+                    });
                 }
             );
         } else {
