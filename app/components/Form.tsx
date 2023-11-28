@@ -5,7 +5,7 @@ import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/
 import { collection, addDoc } from "firebase/firestore"; // Importing new Firebase functions
 import { db } from "../firebase"; // Ensure this is set up for Firebase 10.6.0
 import { v4 as uuidv4 } from 'uuid';
-import { getEmailData } from "./emailData";
+
 
 
 // Main form that submits to Firebase Firestore
@@ -89,7 +89,7 @@ const Form = () => {
                     await addDoc(collection(db, "forms"), newFormData);
     
                     // Send an email notification
-                    const emailData = getEmailData(formData.emailAddress);
+                    const emailData = { to: formData.emailAddress };
                     await addDoc(collection(db, "mail"), emailData);
     
                     setInputKey(Math.random().toString()); // This will cause the file input to re-render, clearing its value
