@@ -14,21 +14,23 @@ const Form = () => {
     interface FormData {
         firstName: string;
         lastName: string;
-        emailAddress: string;
         phoneNumber: string;
+        emailAddress: string;
         receipt: File | null;
-        marketing: boolean;
         terms: boolean;
+        marketing: boolean;
+        
     }
     
     const [formData, setFormData] = useState<FormData>({
         firstName: '',
         lastName: '',
-        emailAddress: '',
         phoneNumber: '',
+        emailAddress: '',
         receipt: null,
-        marketing: false,
-        terms: false
+        terms: false,
+        marketing: false
+        
     });
 
     const [inputKey, setInputKey] = useState (
@@ -97,11 +99,12 @@ const Form = () => {
                     setFormData({
                         firstName: '',
                         lastName: '',
-                        emailAddress: '',
                         phoneNumber: '',
+                        emailAddress: '',
                         receipt: null,
-                        marketing: false,
-                        terms: false
+                        terms: false,
+                        marketing: false
+                        
                     });
                 }
             );
@@ -112,43 +115,53 @@ const Form = () => {
 
 
     return (
-        <form onSubmit={handleSubmit}>
-            <fieldset className="flex flex-col items-center border-2 ">
-             <div className="flex flex-row border-2">
-                <div>
-                    <label htmlFor="firstName">First Name</label>
-                    <input id="firstName" className="flex flex-col border-2 border-slate-800" type="text" name="firstName" onChange={handleChange} value={formData.firstName} required/>
+        <form onSubmit={handleSubmit} className="w-full">
+            <fieldset className="flex flex-col items-center w-full">
+             <div className="flex flex-row justify-between w-full">
+                <div className="w-1/2 pb-2.5 pr-2">
+                    <label htmlFor="firstName">First Name *</label>
+                    <input id="firstName" className="w-full" type="text" name="firstName" placeholder="Your first name" onChange={handleChange} value={formData.firstName} required/>
                 </div>
-                <div>
-                    <label htmlFor="lastName">Last Name</label>
-                    <input id="lastName" className="flex flex-col border-2 border-slate-800" type="text" name="lastName" onChange={handleChange} value={formData.lastName} required/>
+                <div className="w-1/2 pb-2.5">
+                    <label htmlFor="lastName">Last Name *</label>
+                    <input id="lastName" className="w-full" type="text" name="lastName" placeholder="Your last name" onChange={handleChange} value={formData.lastName} required/>
                 </div>
                 </div>
-                <div>
-                    <label htmlFor="emailAddress">Email Address</label>
-                    <input id="emailAddress" className="flex flex-col border-2 border-slate-800" type="email" name="emailAddress" onChange={handleChange} value={formData.emailAddress} required/>
+                <div className="w-full pb-2.5">
+                    <label htmlFor="phoneNumber">Phone Number *</label>
+                    <input id="phoneNumber" className="w-full" type="tel" name="phoneNumber" placeholder="Your phone number" onChange={handleChange} value={formData.phoneNumber} required/>
                 </div>
-               
-                <div>
-                    <label htmlFor="phoneNumber">Phone Number</label>
-                    <input id="phoneNumber" className="flex flex-col border-2 border-slate-800" type="tel" name="phoneNumber" onChange={handleChange} value={formData.phoneNumber} required/>
+                <div className="w-full pb-2.5">
+                    <label htmlFor="emailAddress">Email Address *</label>
+                    <input id="emailAddress" className="w-full" type="email" name="emailAddress" placeholder="Your email address" onChange={handleChange} value={formData.emailAddress} required/>
                 </div>
-                <div>
-                    <label htmlFor="receipt">Receipt Upload</label>
-                    <input key={inputKey} id="receipt" className="flex flex-col border-2 border-slate-800" type="file" name="receipt" accept="image/*" onChange={handleChange}/>
-                </div>
-                <div>
-                    <input type="checkbox" id="marketing" name="marketing" onChange={handleChange} checked={formData.marketing} />
-                    <label id="marketing" htmlFor="marketing">I agree to receive marketing materials</label>
-                </div>
-                <div>
-                    <input type="checkbox" id="terms" name="terms" onChange={handleChange} checked={formData.terms} required />
-                    <label id="terms" htmlFor="terms">I agree to the terms and conditions</label>
-                </div>
+<div className="relative w-full pb-2.5">
+  <label htmlFor="receipt" className="text-center absolute inset-0 cursor-pointer px-3 py-3 text-white bg-black rounded-full">
+    Upload your receipt
+  </label>
+  <input 
+    key={inputKey} 
+    id="receipt" 
+    className="w-full opacity-0 cursor-pointer" 
+    type="file" 
+    name="receipt" 
+    accept="image/*" 
+    onChange={handleChange}
+  />
+</div>
+                <div className="flex justify-start items-center w-full space-x-2 pt-2.5 pb-2.5">
+    <input type="checkbox" id="terms" name="terms" onChange={handleChange} checked={formData.terms} required className="form-checkbox h-5 w-5 text-gray-600 pb-2.5" />
+    <label id="terms" htmlFor="terms" className="w-3/4 ">I agree to the terms and conditions *</label>
+</div>
+<div className="flex justify-start items-center w-full space-x-2 pb-2.5">
+    <input type="checkbox" id="marketing" name="marketing" onChange={handleChange} checked={formData.marketing} className="form-checkbox h-5 w-5 text-gray-600" />
+    <label id="marketing" htmlFor="marketing" className="w-3/4">I’m happy for Westinghouse to contact me regarding news, products and offers</label>
+</div>
             </fieldset>
-            <div>
-                <button className="border-2 border-red-500 bg-slate-950 text-white px-4" type="submit">Submit</button>
-            </div>
+            <div className="w-full">
+                <button 
+  className="w-36 py-1 px-7 mt-2.5 border-2 bg-[#f6502b] border-[#f6502b] text-white rounded-full cursor-pointer text-lg font-semibold leading-tight uppercase text-center" 
+  type="submit">Submit</button></div>
         </form>
     )
 }
